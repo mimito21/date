@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lunch Invitation • Mitmita Restaurant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --cream:        #fbf6ef;
+      --cream-warm:   #f6ecdf;
+      --blush:        #fadfe4;
+      --blush-soft:   #fdeef1;
+      --rose:         #d98a9e;
+      --rose-deep:    #b96a80;
+      --burgundy:     #7a3a48;
+      --ink:          #4a3036;
+      --ink-soft:     #8a6f76;
+      --gold:         #c9a25a;
+      --gold-soft:    #e9d5a8;
+      --paper:        #fffaf3;
+      --line:         rgba(185, 106, 128, 0.25);
+      --shadow-lg:    0 30px 80px -20px rgba(122, 58, 72, 0.28),
+                      0 12px 32px -12px rgba(122, 58, 72, 0.18);
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, var(--blush-soft) 0%, transparent 60%),
+        radial-gradient(900px 500px at 110% 110%, var(--cream-warm) 0%, transparent 55%),
+        linear-gradient(135deg, #fdf7ee 0%, #fff 45%, #fdeef1 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 20px;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ——— Drifting hearts behind the card ——— */
+    .bg-hearts {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+    .bg-hearts span {
+      position: absolute;
+      bottom: -40px;
+      color: var(--rose);
+      opacity: 0.35;
+      animation: drift linear infinite;
+      filter: blur(0.2px);
+    }
+    .bg-hearts span:nth-child(1)  { left: 6%;  font-size: 14px; animation-duration: 22s; animation-delay: 0s;   }
+    .bg-hearts span:nth-child(2)  { left: 18%; font-size: 10px; animation-duration: 26s; animation-delay: 4s;   }
+    .bg-hearts span:nth-child(3)  { left: 30%; font-size: 16px; animation-duration: 24s; animation-delay: 1.5s; }
+    .bg-hearts span:nth-child(4)  { left: 46%; font-size: 12px; animation-duration: 28s; animation-delay: 6s;   }
+    .bg-hearts span:nth-child(5)  { left: 58%; font-size: 18px; animation-duration: 21s; animation-delay: 2.5s; }
+    .bg-hearts span:nth-child(6)  { left: 70%; font-size: 12px; animation-duration: 25s; animation-delay: 5s;   }
+    .bg-hearts span:nth-child(7)  { left: 82%; font-size: 14px; animation-duration: 23s; animation-delay: 3s;   }
+    .bg-hearts span:nth-child(8)  { left: 93%; font-size: 10px; animation-duration: 27s; animation-delay: 7s;   }
+
+    @keyframes drift {
+      0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+      10%  { opacity: 0.35; }
+      50%  { transform: translateY(-55vh) translateX(20px) rotate(180deg); }
+      90%  { opacity: 0.35; }
+      100% { transform: translateY(-110vh) translateX(-10px) rotate(360deg); opacity: 0; }
+    }
+
+    /* ——— The envelope-style card ——— */
+    .card {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 460px;
+      background: var(--paper);
+      border-radius: 22px;
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      animation: cardIn 1s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(24px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Decorative top header (warm cream → blush) */
+    .card-header {
+      position: relative;
+      background:
+        radial-gradient(circle at 50% 120%, var(--blush) 0%, transparent 65%),
+        linear-gradient(135deg, var(--cream-warm) 0%, var(--blush-soft) 100%);
+      padding: 38px 28px 24px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--burgundy);
+      font-weight: 600;
+      margin-bottom: 14px;
+      animation: fadeUp 0.8s 0.15s both;
+    }
+    .eyebrow::before,
+    .eyebrow::after {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: var(--rose);
+      opacity: 0.6;
+    }
+
+    .title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 34px;
+      font-weight: 600;
+      color: var(--burgundy);
+      line-height: 1.15;
+      letter-spacing: 0.3px;
+      animation: fadeUp 0.8s 0.25s both;
+    }
+    .title .heart {
+      color: var(--rose-deep);
+      display: inline-block;
+      animation: beat 1.6s ease-in-out infinite;
+    }
+    @keyframes beat {
+      0%,100% { transform: scale(1); }
+      30%     { transform: scale(1.18); }
+      60%     { transform: scale(0.96); }
+    }
+
+    .ornament {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 14px;
+      color: var(--rose);
+      font-size: 12px;
+      animation: fadeUp 0.8s 0.35s both;
+    }
+    .ornament::before,
+    .ornament::after {
+      content: '';
+      width: 50px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+    }
+
+    /* Card body */
+    .card-body {
+      padding: 28px 30px 18px;
+    }
+
+    .greeting {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 22px;
+      color: var(--burgundy);
+      margin-bottom: 14px;
+      animation: fadeUp 0.8s 0.4s both;
+    }
+
+    .message {
+      font-size: 15px;
+      line-height: 1.8;
+      color: var(--ink);
+      margin-bottom: 14px;
+      animation: fadeUp 0.8s 0.5s both;
+    }
+
+    .venue {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 600;
+      color: var(--burgundy);
+      letter-spacing: 0.3px;
+      border-bottom: 1px dashed var(--rose);
+      padding-bottom: 1px;
+    }
+
+    /* Date / time block — like a vintage RSVP card */
+    .when-block {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 14px;
+      margin: 22px 0 18px;
+      padding: 16px 14px;
+      background: linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      animation: fadeUp 0.8s 0.6s both;
+    }
+    .when-block .col {
+      text-align: center;
+    }
+    .when-block .label {
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+    .when-block .value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--burgundy);
+      line-height: 1;
+    }
+    .when-block .sep {
+      width: 1px;
+      height: 38px;
+      background: var(--line);
+    }
+
+    .closing {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic;
+      font-size: 19px;
+      color: var(--rose-deep);
+      text-align: center;
+      margin: 6px 0 22px;
+      animation: fadeUp 0.8s 0.7s both;
+    }
+
+    /* Buttons */
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      animation: fadeUp 0.8s 0.8s both;
+    }
+
+    button {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      padding: 14px 18px;
+      border-radius: 12px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition:
+        transform 0.2s ease,
+        box-shadow 0.25s ease,
+        background 0.25s ease,
+        color 0.25s ease,
+        border-color 0.25s ease;
+    }
+    button:hover  { transform: translateY(-2px); }
+    button:active { transform: translateY(0); }
+
+    .btn-yes {
+      background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 60%, var(--burgundy) 130%);
+      color: #fff;
+      box-shadow: 0 10px 22px -8px rgba(185, 106, 128, 0.55);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-yes::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+      transform: translateX(-100%);
+      transition: transform 0.7s ease;
+    }
+    .btn-yes:hover::after { transform: translateX(100%); }
+    .btn-yes:hover { box-shadow: 0 14px 28px -8px rgba(185, 106, 128, 0.65); }
+
+    .btn-soft {
+      background: var(--paper);
+      color: var(--burgundy);
+      border-color: var(--line);
+    }
+    .btn-soft:hover {
+      background: var(--blush-soft);
+      border-color: var(--rose);
+    }
+
+    /* Footer */
+    .card-footer {
+      text-align: center;
+      padding: 16px 20px 22px;
+      font-size: 11.5px;
+      letter-spacing: 1.8px;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      border-top: 1px solid var(--line);
+      margin-top: 18px;
+      animation: fadeUp 0.8s 0.9s both;
+    }
+    .card-footer .h { color: var(--rose-deep); letter-spacing: 0; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ——— Response state ——— */
+    .response {
+      text-align: center;
+      padding: 8px 4px 6px;
+      animation: fadeUp 0.7s ease both;
+    }
+    .response .crest {
+      font-size: 46px;
+      color: var(--rose-deep);
+      display: inline-block;
+      animation: beat 1.4s ease-in-out infinite;
+      margin-bottom: 14px;
+    }
+    .response .resp-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      color: var(--burgundy);
+      font-weight: 600;
+      margin-bottom: 8px;
+      line-height: 1.25;
+    }
+    .response p {
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--ink);
+      white-space: pre-line;
+    }
+    .confirmation {
+      margin-top: 22px;
+      padding: 14px 18px;
+      background: linear-gradient(135deg, var(--blush-soft), var(--cream-warm));
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--burgundy);
+      font-size: 13.5px;
+      font-weight: 500;
+      line-height: 1.6;
+      animation: fadeUp 0.7s 0.3s both;
+    }
+
+    /* ——— Heart burst on Yes ——— */
+    .heart-burst {
+      position: fixed;
+      pointer-events: none;
+      inset: 0;
+      z-index: 9999;
+      overflow: hidden;
+    }
+    .heart-burst .h {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      color: var(--rose-deep);
+      animation: burst 1.6s cubic-bezier(.2,.7,.3,1) forwards;
+      will-change: transform, opacity;
+    }
+    @keyframes burst {
+      0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
+      15%  { opacity: 1; }
+      100% { transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) scale(1.05) rotate(var(--r)); opacity: 0; }
+    }
+
+    @media (max-width: 480px) {
+      .card { border-radius: 18px; }
+      .card-header { padding: 32px 22px 20px; }
+      .card-body   { padding: 24px 22px 14px; }
+      .title       { font-size: 28px; }
+      .greeting    { font-size: 20px; }
+      .message     { font-size: 14.5px; }
+      .when-block .value { font-size: 19px; }
+      .closing     { font-size: 17px; }
+      button       { font-size: 14.5px; padding: 13px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="bg-hearts" aria-hidden="true">
+    <span>❤</span><span>❤</span><span>❤</span><span>❤</span>
+    <span>❤</span><span>❤</span><span>❤</span><span>❤</span>
+  </div>
+
+  <main class="card" id="card">
+    <div id="card-content">
+      <header class="card-header">
+        <div class="eyebrow">A Little Note For You</div>
+        <h1 class="title">
+          <span class="heart">❤</span> Lunch Invitation <span class="heart">❤</span>
+        </h1>
+        <div class="ornament">✦</div>
+      </header>
+
+      <section class="card-body">
+        <p class="greeting">Hey Love,</p>
+
+        <p class="message">
+          Tomorrow is the last day before the fasting season begins, and I know
+          you'll probably want to spend time with your family too.
+        </p>
+
+        <p class="message">
+          I'd love to steal just a little bit of your afternoon and take you out
+          for lunch at <span class="venue">Mitmita Restaurant</span> as a small
+          celebration. I recently got my salary, and I'd be really happy if
+          you'd let me treat you.
+        </p>
+
+        <div class="when-block">
+          <div class="col">
+            <div class="label">Day</div>
+            <div class="value">Sunday</div>
+          </div>
+          <div class="sep"></div>
+          <div class="col">
+            <div class="label">Time</div>
+            <div class="value">1:00 PM</div>
+          </div>
+        </div>
+
+        <p class="closing">Will you join me? ❤</p>
+
+        <div class="buttons">
+          <button class="btn-yes"  id="btn-yes">Yes ❤️</button>
+          <button class="btn-soft" id="btn-time">I Need Time 🤔</button>
+          <button class="btn-soft" id="btn-no">Can't Make It 😔</button>
+        </div>
+      </section>
+
+      <footer class="card-footer">
+        Made With Love <span class="h">❤️</span>
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const RECIPIENT = 'your-email@example.com';
+      const SUBJECT   = 'He Said Yes ❤️';
+      const BODY      = 'I accepted the lunch invitation at Mitmita Restaurant for Sunday at 1:00 PM.';
+
+      const cardContent = document.getElementById('card-content');
+
+      function renderResponse(innerHTML) {
+        cardContent.innerHTML =
+          '<section class="card-body">' +
+            '<div class="response">' + innerHTML + '</div>' +
+          '</section>' +
+          '<footer class="card-footer">Made With Love <span class="h">❤️</span></footer>';
+      }
+
+      function spawnHearts() {
+        const layer = document.createElement('div');
+        layer.className = 'heart-burst';
+
+        const count = 28;
+        for (let i = 0; i < count; i++) {
+          const h = document.createElement('span');
+          h.className = 'h';
+          h.textContent = '❤';
+          const angle    = (Math.PI * 2) * (i / count) + (Math.random() * 0.5 - 0.25);
+          const distance = 140 + Math.random() * 220;
+          const x = Math.cos(angle) * distance;
+          const y = Math.sin(angle) * distance;
+          h.style.setProperty('--x', x + 'px');
+          h.style.setProperty('--y', y + 'px');
+          h.style.setProperty('--r', (Math.random() * 360) + 'deg');
+          h.style.fontSize = (14 + Math.random() * 22) + 'px';
+          h.style.animationDelay = (Math.random() * 0.25) + 's';
+          h.style.opacity = (0.7 + Math.random() * 0.3).toString();
+          layer.appendChild(h);
+        }
+
+        document.body.appendChild(layer);
+        setTimeout(() => layer.remove(), 1900);
+      }
+
+      function openMailClient() {
+        const mailto =
+          'mailto:' + encodeURIComponent(RECIPIENT) +
+          '?subject=' + encodeURIComponent(SUBJECT) +
+          '&body='    + encodeURIComponent(BODY);
+        window.location.href = mailto;
+      }
+
+      document.getElementById('btn-yes').addEventListener('click', function () {
+        spawnHearts();
+
+        renderResponse(
+          '<div class="crest">❤️</div>' +
+          '<div class="resp-title">Yay! Thank you for saying yes ❤️</div>' +
+          '<p>I can\'t wait to spend time with you tomorrow.</p>' +
+          '<div class="confirmation">A confirmation has been prepared and sent.<br>Check your email for the details ❤️</div>'
+        );
+
+        setTimeout(openMailClient, 700);
+      });
+
+      document.getElementById('btn-time').addEventListener('click', function () {
+        renderResponse(
+          '<div class="crest">🤍</div>' +
+          '<div class="resp-title">No pressure 😊</div>' +
+          '<p>Take your time and let me know.</p>'
+        );
+      });
+
+      document.getElementById('btn-no').addEventListener('click', function () {
+        renderResponse(
+          '<div class="crest">❤️</div>' +
+          '<div class="resp-title">That\'s okay ❤️</div>' +
+          '<p>We\'ll find another day.</p>'
+        );
+      });
+    })();
+  </script>
+</body>
+</html>
