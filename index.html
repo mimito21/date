@@ -3,284 +3,416 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lunch Invitation • Mitmita Restaurant</title>
+  <title>የምሳ ግብዣ • Lunch Invitation</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Noto+Sans+Ethiopic:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    *,
-    *::before,
-    *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --cream:        #fbf6ef;
-      --cream-warm:   #f6ecdf;
-      --blush:        #fadfe4;
-      --blush-soft:   #fdeef1;
-      --rose:         #d98a9e;
-      --rose-deep:    #b96a80;
-      --burgundy:     #7a3a48;
-      --ink:          #4a3036;
-      --ink-soft:     #8a6f76;
-      --gold:         #c9a25a;
-      --gold-soft:    #e9d5a8;
-      --paper:        #fffaf3;
-      --line:         rgba(185, 106, 128, 0.25);
-      --shadow-lg:    0 30px 80px -20px rgba(122, 58, 72, 0.28),
-                      0 12px 32px -12px rgba(122, 58, 72, 0.18);
+      --cream-aged:    #efe2c4;
+      --cream-warm:    #f5e9cf;
+      --parchment:     #fbf2dc;
+      --parchment-2:   #f6ead0;
+
+      --burgundy:      #6b1c1c;
+      --burgundy-deep: #4a0f0f;
+      --burgundy-soft: #8b3030;
+
+      --gold:          #c19a3d;
+      --gold-bright:   #d9b251;
+      --gold-soft:     #e8d39c;
+
+      --green:         #2f5d3a;
+      --green-soft:    #517a55;
+
+      --coffee:        #3a2414;
+      --coffee-soft:   #5a3a23;
+      --ink:           #2c1d10;
+      --sepia:         #6e553a;
+
+      --shadow:        0 30px 70px -20px rgba(74, 15, 15, 0.45),
+                       0 12px 28px -10px rgba(58, 36, 20, 0.35);
     }
 
+    /* ——— Aged paper background with vignette and grain ——— */
     html, body { height: 100%; }
 
     body {
-      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+      font-family: 'EB Garamond', 'Cormorant Garamond', Georgia, serif;
       color: var(--ink);
-      background:
-        radial-gradient(1200px 600px at 10% -10%, var(--blush-soft) 0%, transparent 60%),
-        radial-gradient(900px 500px at 110% 110%, var(--cream-warm) 0%, transparent 55%),
-        linear-gradient(135deg, #fdf7ee 0%, #fff 45%, #fdeef1 100%);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 28px 20px;
+      padding: 28px 18px;
       overflow-x: hidden;
       position: relative;
+      background:
+        /* vignette */
+        radial-gradient(ellipse at center, transparent 35%, rgba(58, 36, 20, 0.28) 100%),
+        /* warm parchment gradient */
+        radial-gradient(circle at 18% 20%, var(--cream-warm) 0%, transparent 55%),
+        radial-gradient(circle at 82% 85%, var(--gold-soft) 0%, transparent 55%),
+        linear-gradient(135deg, var(--cream-aged) 0%, var(--cream-warm) 50%, var(--cream-aged) 100%);
     }
 
-    /* ——— Drifting hearts behind the card ——— */
-    .bg-hearts {
+    /* Subtle paper grain — SVG noise */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.18;
+      mix-blend-mode: multiply;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.23  0 0 0 0 0.15  0 0 0 0 0.07  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    }
+
+    /* ——— Floating background motifs (hearts, crosses, diamonds) ——— */
+    .bg-motifs {
       position: fixed;
       inset: 0;
       pointer-events: none;
       overflow: hidden;
       z-index: 0;
     }
-    .bg-hearts span {
+    .bg-motifs span {
       position: absolute;
-      bottom: -40px;
-      color: var(--rose);
-      opacity: 0.35;
+      bottom: -50px;
       animation: drift linear infinite;
-      filter: blur(0.2px);
+      opacity: 0;
+      font-family: 'Cormorant Garamond', serif;
     }
-    .bg-hearts span:nth-child(1)  { left: 6%;  font-size: 14px; animation-duration: 22s; animation-delay: 0s;   }
-    .bg-hearts span:nth-child(2)  { left: 18%; font-size: 10px; animation-duration: 26s; animation-delay: 4s;   }
-    .bg-hearts span:nth-child(3)  { left: 30%; font-size: 16px; animation-duration: 24s; animation-delay: 1.5s; }
-    .bg-hearts span:nth-child(4)  { left: 46%; font-size: 12px; animation-duration: 28s; animation-delay: 6s;   }
-    .bg-hearts span:nth-child(5)  { left: 58%; font-size: 18px; animation-duration: 21s; animation-delay: 2.5s; }
-    .bg-hearts span:nth-child(6)  { left: 70%; font-size: 12px; animation-duration: 25s; animation-delay: 5s;   }
-    .bg-hearts span:nth-child(7)  { left: 82%; font-size: 14px; animation-duration: 23s; animation-delay: 3s;   }
-    .bg-hearts span:nth-child(8)  { left: 93%; font-size: 10px; animation-duration: 27s; animation-delay: 7s;   }
+    .bg-motifs .h    { color: var(--burgundy);   }
+    .bg-motifs .g    { color: var(--gold);       }
+    .bg-motifs .gn   { color: var(--green-soft); }
+
+    .bg-motifs span:nth-child(1)  { left: 5%;  font-size: 14px; animation-duration: 26s; animation-delay: 0s;   }
+    .bg-motifs span:nth-child(2)  { left: 14%; font-size: 18px; animation-duration: 30s; animation-delay: 4s;   }
+    .bg-motifs span:nth-child(3)  { left: 25%; font-size: 12px; animation-duration: 24s; animation-delay: 1.5s; }
+    .bg-motifs span:nth-child(4)  { left: 38%; font-size: 16px; animation-duration: 28s; animation-delay: 6s;   }
+    .bg-motifs span:nth-child(5)  { left: 50%; font-size: 14px; animation-duration: 32s; animation-delay: 2.5s; }
+    .bg-motifs span:nth-child(6)  { left: 62%; font-size: 18px; animation-duration: 27s; animation-delay: 5s;   }
+    .bg-motifs span:nth-child(7)  { left: 74%; font-size: 12px; animation-duration: 29s; animation-delay: 3s;   }
+    .bg-motifs span:nth-child(8)  { left: 86%; font-size: 16px; animation-duration: 25s; animation-delay: 7s;   }
+    .bg-motifs span:nth-child(9)  { left: 94%; font-size: 14px; animation-duration: 31s; animation-delay: 1s;   }
 
     @keyframes drift {
-      0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-      10%  { opacity: 0.35; }
-      50%  { transform: translateY(-55vh) translateX(20px) rotate(180deg); }
+      0%   { transform: translateY(0) rotate(0deg);   opacity: 0; }
+      10%  { opacity: 0.45; }
       90%  { opacity: 0.35; }
-      100% { transform: translateY(-110vh) translateX(-10px) rotate(360deg); opacity: 0; }
+      100% { transform: translateY(-115vh) rotate(360deg); opacity: 0; }
     }
 
-    /* ——— The envelope-style card ——— */
+    /* ——— The card ——— */
     .card {
       position: relative;
-      z-index: 1;
+      z-index: 2;
       width: 100%;
-      max-width: 460px;
-      background: var(--paper);
-      border-radius: 22px;
-      box-shadow: var(--shadow-lg);
+      max-width: 470px;
+      background: var(--parchment);
+      border: 1px solid var(--burgundy);
+      border-radius: 4px;
+      padding: 0;
+      box-shadow: var(--shadow);
       overflow: hidden;
-      animation: cardIn 1s cubic-bezier(.2,.8,.2,1) both;
+      animation: cardIn 1.1s cubic-bezier(.2,.8,.2,1) both;
+    }
+
+    /* Inner double-line frame */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 8px; left: 8px; right: 8px; bottom: 8px;
+      border: 1px solid var(--gold);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .card::after {
+      content: '';
+      position: absolute;
+      top: 12px; left: 12px; right: 12px; bottom: 12px;
+      border: 1px solid var(--burgundy);
+      pointer-events: none;
+      z-index: 1;
     }
 
     @keyframes cardIn {
-      from { opacity: 0; transform: translateY(24px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
+      from { opacity: 0; transform: translateY(20px) scale(0.97); filter: sepia(0.3); }
+      to   { opacity: 1; transform: translateY(0)    scale(1);    filter: sepia(0);   }
     }
 
-    /* Decorative top header (warm cream → blush) */
-    .card-header {
+    /* —— Tibeb (Ethiopian telet) embroidery band —— */
+    .tibeb {
       position: relative;
-      background:
-        radial-gradient(circle at 50% 120%, var(--blush) 0%, transparent 65%),
-        linear-gradient(135deg, var(--cream-warm) 0%, var(--blush-soft) 100%);
-      padding: 38px 28px 24px;
-      text-align: center;
-      border-bottom: 1px solid var(--line);
+      z-index: 2;
+      height: 18px;
+      background-color: var(--burgundy-deep);
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='18' viewBox='0 0 44 18'><rect width='44' height='18' fill='%234a0f0f'/><path d='M0 9 L11 2 L22 9 L11 16 Z' fill='%23c19a3d'/><path d='M22 9 L33 2 L44 9 L33 16 Z' fill='%232f5d3a'/><circle cx='11' cy='9' r='2.2' fill='%234a0f0f'/><circle cx='33' cy='9' r='2.2' fill='%23c19a3d'/><path d='M0 0 H44' stroke='%23c19a3d' stroke-width='0.5'/><path d='M0 18 H44' stroke='%23c19a3d' stroke-width='0.5'/></svg>");
+      background-repeat: repeat-x;
+      background-size: auto 18px;
     }
 
-    .eyebrow {
+    /* —— Header —— */
+    .card-inner {
+      position: relative;
+      z-index: 2;
+      padding: 30px 30px 26px;
+    }
+
+    .header {
+      text-align: center;
+      padding-bottom: 18px;
+      position: relative;
+    }
+
+    .eyebrow-am {
+      font-family: 'Noto Sans Ethiopic', sans-serif;
+      font-size: 13px;
+      letter-spacing: 4px;
+      color: var(--burgundy);
+      font-weight: 500;
+      animation: fadeUp 0.9s 0.15s both;
+    }
+
+    .eyebrow-en {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      letter-spacing: 3px;
+      gap: 12px;
+      font-family: 'EB Garamond', serif;
+      font-size: 10.5px;
+      letter-spacing: 5px;
       text-transform: uppercase;
-      color: var(--burgundy);
-      font-weight: 600;
-      margin-bottom: 14px;
-      animation: fadeUp 0.8s 0.15s both;
+      color: var(--sepia);
+      margin: 8px 0 18px;
+      animation: fadeUp 0.9s 0.25s both;
     }
-    .eyebrow::before,
-    .eyebrow::after {
+    .eyebrow-en::before,
+    .eyebrow-en::after {
       content: '';
       width: 28px;
       height: 1px;
-      background: var(--rose);
-      opacity: 0.6;
+      background: var(--gold);
     }
 
     .title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 34px;
-      font-weight: 600;
-      color: var(--burgundy);
-      line-height: 1.15;
-      letter-spacing: 0.3px;
-      animation: fadeUp 0.8s 0.25s both;
+      font-family: 'Playfair Display', 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: 36px;
+      line-height: 1.1;
+      color: var(--burgundy-deep);
+      letter-spacing: 0.5px;
+      animation: fadeUp 0.9s 0.35s both;
     }
-    .title .heart {
-      color: var(--rose-deep);
+    .title .h {
+      color: var(--burgundy);
       display: inline-block;
-      animation: beat 1.6s ease-in-out infinite;
+      animation: beat 1.7s ease-in-out infinite;
+      font-size: 26px;
+      vertical-align: middle;
+      margin: 0 4px;
     }
     @keyframes beat {
       0%,100% { transform: scale(1); }
       30%     { transform: scale(1.18); }
-      60%     { transform: scale(0.96); }
+      60%     { transform: scale(0.95); }
     }
 
     .ornament {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-top: 14px;
-      color: var(--rose);
-      font-size: 12px;
-      animation: fadeUp 0.8s 0.35s both;
+      gap: 12px;
+      margin-top: 16px;
+      color: var(--gold);
+      font-size: 14px;
+      animation: fadeUp 0.9s 0.45s both;
     }
-    .ornament::before,
-    .ornament::after {
+    .ornament::before, .ornament::after {
       content: '';
-      width: 50px;
+      width: 56px;
       height: 1px;
-      background: linear-gradient(90deg, transparent, var(--rose), transparent);
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
     }
 
-    /* Card body */
-    .card-body {
-      padding: 28px 30px 18px;
+    /* —— Wax seal in top-right —— */
+    .seal {
+      position: absolute;
+      top: -6px;
+      right: -6px;
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 28%, #b32f2f 0%, var(--burgundy) 45%, var(--burgundy-deep) 75%, #2a0707 100%);
+      box-shadow:
+        0 6px 14px rgba(74, 15, 15, 0.5),
+        inset 0 -6px 12px rgba(0,0,0,0.35),
+        inset 0 0 0 2px rgba(201, 154, 61, 0.55),
+        inset 0 0 0 4px rgba(74, 15, 15, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transform: rotate(-12deg);
+      z-index: 3;
+      animation: sealIn 1.2s cubic-bezier(.2,.8,.2,1) 0.6s both;
+    }
+    .seal-mark {
+      font-family: 'Noto Sans Ethiopic', serif;
+      color: var(--gold-soft);
+      font-size: 22px;
+      font-weight: 700;
+      text-shadow: 0 1px 0 rgba(0,0,0,0.4);
+      letter-spacing: -1px;
+    }
+    @keyframes sealIn {
+      from { opacity: 0; transform: rotate(-30deg) scale(0.6); }
+      to   { opacity: 1; transform: rotate(-12deg) scale(1);    }
+    }
+
+    /* —— Body —— */
+    .body {
+      padding: 8px 4px 4px;
     }
 
     .greeting {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 22px;
+      font-weight: 500;
+      font-size: 24px;
       color: var(--burgundy);
+      margin-bottom: 6px;
+      animation: fadeUp 0.9s 0.5s both;
+    }
+    .greeting-am {
+      display: block;
+      font-family: 'Noto Sans Ethiopic', sans-serif;
+      font-style: normal;
+      font-size: 13px;
+      color: var(--sepia);
+      letter-spacing: 1px;
       margin-bottom: 14px;
-      animation: fadeUp 0.8s 0.4s both;
+      font-weight: 500;
     }
 
     .message {
-      font-size: 15px;
-      line-height: 1.8;
+      font-family: 'EB Garamond', serif;
+      font-size: 16.5px;
+      line-height: 1.85;
       color: var(--ink);
       margin-bottom: 14px;
-      animation: fadeUp 0.8s 0.5s both;
+      animation: fadeUp 0.9s 0.6s both;
     }
+    .message + .message { margin-top: -2px; }
 
     .venue {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-weight: 600;
       color: var(--burgundy);
-      letter-spacing: 0.3px;
-      border-bottom: 1px dashed var(--rose);
-      padding-bottom: 1px;
+      font-style: italic;
+      letter-spacing: 0.4px;
+      border-bottom: 1px dotted var(--gold);
+      padding: 0 2px 1px;
     }
 
-    /* Date / time block — like a vintage RSVP card */
-    .when-block {
+    /* —— Vintage RSVP date stamp —— */
+    .when-stamp {
+      margin: 22px auto 18px;
+      max-width: 320px;
+      padding: 16px 20px;
+      text-align: center;
+      border-top: 2px solid var(--burgundy);
+      border-bottom: 2px solid var(--burgundy);
+      position: relative;
+      animation: fadeUp 0.9s 0.7s both;
+    }
+    .when-stamp::before,
+    .when-stamp::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      height: 1px;
+      background: var(--gold);
+    }
+    .when-stamp::before { top: 4px; }
+    .when-stamp::after  { bottom: 4px; }
+
+    .when-stamp .row {
       display: grid;
       grid-template-columns: 1fr auto 1fr;
       align-items: center;
       gap: 14px;
-      margin: 22px 0 18px;
-      padding: 16px 14px;
-      background: linear-gradient(180deg, var(--cream) 0%, var(--paper) 100%);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      animation: fadeUp 0.8s 0.6s both;
     }
-    .when-block .col {
+    .when-stamp .col {
       text-align: center;
     }
-    .when-block .label {
+    .when-stamp .label {
+      font-family: 'EB Garamond', serif;
       font-size: 10px;
-      letter-spacing: 2.5px;
+      letter-spacing: 3px;
       text-transform: uppercase;
-      color: var(--ink-soft);
-      margin-bottom: 6px;
+      color: var(--sepia);
+      margin-bottom: 4px;
     }
-    .when-block .value {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 22px;
+    .when-stamp .value {
+      font-family: 'Playfair Display', serif;
       font-weight: 600;
-      color: var(--burgundy);
+      font-size: 22px;
+      color: var(--burgundy-deep);
       line-height: 1;
     }
-    .when-block .sep {
-      width: 1px;
-      height: 38px;
-      background: var(--line);
+    .when-stamp .ornament-mid {
+      color: var(--gold);
+      font-size: 18px;
     }
 
     .closing {
-      font-family: 'Cormorant Garamond', serif;
+      font-family: 'Playfair Display', serif;
       font-style: italic;
-      font-size: 19px;
-      color: var(--rose-deep);
+      font-size: 20px;
+      color: var(--burgundy);
       text-align: center;
-      margin: 6px 0 22px;
-      animation: fadeUp 0.8s 0.7s both;
+      margin: 8px 0 24px;
+      animation: fadeUp 0.9s 0.8s both;
     }
 
-    /* Buttons */
+    /* —— Buttons —— */
     .buttons {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      animation: fadeUp 0.8s 0.8s both;
+      animation: fadeUp 0.9s 0.9s both;
     }
 
     button {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 15px;
+      font-family: 'EB Garamond', 'Cormorant Garamond', serif;
+      font-size: 16px;
       font-weight: 600;
-      padding: 14px 18px;
-      border-radius: 12px;
-      border: 1px solid transparent;
+      padding: 13px 18px;
+      border-radius: 2px;
+      border: 1px solid var(--burgundy);
       cursor: pointer;
-      letter-spacing: 0.3px;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
       transition:
         transform 0.2s ease,
         box-shadow 0.25s ease,
-        background 0.25s ease,
-        color 0.25s ease,
-        border-color 0.25s ease;
+        background 0.3s ease,
+        color 0.3s ease,
+        border-color 0.3s ease;
     }
     button:hover  { transform: translateY(-2px); }
     button:active { transform: translateY(0); }
 
     .btn-yes {
-      background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 60%, var(--burgundy) 130%);
-      color: #fff;
-      box-shadow: 0 10px 22px -8px rgba(185, 106, 128, 0.55);
+      background: linear-gradient(180deg, var(--burgundy-soft) 0%, var(--burgundy) 50%, var(--burgundy-deep) 100%);
+      color: var(--gold-soft);
+      border-color: var(--burgundy-deep);
+      box-shadow:
+        0 8px 18px -4px rgba(74, 15, 15, 0.5),
+        inset 0 0 0 1px rgba(201, 154, 61, 0.35);
       position: relative;
       overflow: hidden;
     }
@@ -288,36 +420,51 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+      background: linear-gradient(120deg, transparent 30%, rgba(232, 211, 156, 0.25) 50%, transparent 70%);
       transform: translateX(-100%);
-      transition: transform 0.7s ease;
+      transition: transform 0.8s ease;
     }
     .btn-yes:hover::after { transform: translateX(100%); }
-    .btn-yes:hover { box-shadow: 0 14px 28px -8px rgba(185, 106, 128, 0.65); }
+    .btn-yes:hover {
+      box-shadow:
+        0 12px 24px -4px rgba(74, 15, 15, 0.6),
+        inset 0 0 0 1px rgba(232, 211, 156, 0.5);
+      color: #fff;
+    }
 
     .btn-soft {
-      background: var(--paper);
+      background: var(--parchment-2);
       color: var(--burgundy);
-      border-color: var(--line);
     }
     .btn-soft:hover {
-      background: var(--blush-soft);
-      border-color: var(--rose);
+      background: var(--gold-soft);
+      border-color: var(--burgundy-deep);
+      color: var(--burgundy-deep);
     }
 
-    /* Footer */
+    /* —— Footer —— */
     .card-footer {
       text-align: center;
-      padding: 16px 20px 22px;
-      font-size: 11.5px;
-      letter-spacing: 1.8px;
+      padding: 14px 24px 8px;
+      margin-top: 22px;
+      border-top: 1px dotted var(--gold);
+      font-family: 'EB Garamond', serif;
+      font-size: 12px;
+      letter-spacing: 2px;
       text-transform: uppercase;
-      color: var(--ink-soft);
-      border-top: 1px solid var(--line);
-      margin-top: 18px;
-      animation: fadeUp 0.8s 0.9s both;
+      color: var(--sepia);
+      animation: fadeUp 0.9s 1s both;
     }
-    .card-footer .h { color: var(--rose-deep); letter-spacing: 0; }
+    .card-footer .h { color: var(--burgundy); letter-spacing: 0; }
+    .card-footer .am {
+      display: block;
+      font-family: 'Noto Sans Ethiopic', sans-serif;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--burgundy);
+      margin-top: 4px;
+      text-transform: none;
+    }
 
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(8px); }
@@ -327,26 +474,34 @@
     /* ——— Response state ——— */
     .response {
       text-align: center;
-      padding: 8px 4px 6px;
-      animation: fadeUp 0.7s ease both;
+      padding: 14px 4px 6px;
+      animation: fadeUp 0.8s ease both;
     }
     .response .crest {
-      font-size: 46px;
-      color: var(--rose-deep);
+      font-size: 50px;
+      color: var(--burgundy);
       display: inline-block;
-      animation: beat 1.4s ease-in-out infinite;
+      animation: beat 1.5s ease-in-out infinite;
       margin-bottom: 14px;
     }
     .response .resp-title {
-      font-family: 'Cormorant Garamond', serif;
-      font-size: 26px;
-      color: var(--burgundy);
-      font-weight: 600;
-      margin-bottom: 8px;
+      font-family: 'Playfair Display', serif;
+      font-size: 28px;
+      color: var(--burgundy-deep);
+      font-weight: 700;
+      margin-bottom: 10px;
       line-height: 1.25;
     }
+    .response .resp-am {
+      font-family: 'Noto Sans Ethiopic', sans-serif;
+      font-size: 13px;
+      color: var(--sepia);
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+    }
     .response p {
-      font-size: 15.5px;
+      font-family: 'EB Garamond', serif;
+      font-size: 17px;
       line-height: 1.75;
       color: var(--ink);
       white-space: pre-line;
@@ -364,10 +519,11 @@
       position: absolute;
       left: 50%;
       top: 50%;
-      color: var(--rose-deep);
-      animation: burst 1.6s cubic-bezier(.2,.7,.3,1) forwards;
+      color: var(--burgundy);
+      animation: burst 1.7s cubic-bezier(.2,.7,.3,1) forwards;
       will-change: transform, opacity;
     }
+    .heart-burst .h.gold { color: var(--gold); }
     @keyframes burst {
       0%   { transform: translate(-50%, -50%) scale(0.3); opacity: 0; }
       15%  { opacity: 1; }
@@ -375,75 +531,100 @@
     }
 
     @media (max-width: 480px) {
-      .card { border-radius: 18px; }
-      .card-header { padding: 32px 22px 20px; }
-      .card-body   { padding: 24px 22px 14px; }
-      .title       { font-size: 28px; }
-      .greeting    { font-size: 20px; }
-      .message     { font-size: 14.5px; }
-      .when-block .value { font-size: 19px; }
-      .closing     { font-size: 17px; }
-      button       { font-size: 14.5px; padding: 13px 16px; }
+      .card-inner { padding: 24px 22px 22px; }
+      .title      { font-size: 30px; }
+      .title .h   { font-size: 22px; }
+      .greeting   { font-size: 22px; }
+      .message    { font-size: 15.5px; }
+      .when-stamp .value { font-size: 19px; }
+      .closing    { font-size: 18px; }
+      button      { font-size: 14.5px; padding: 12px 16px; }
+      .seal       { width: 54px; height: 54px; }
+      .seal-mark  { font-size: 19px; }
     }
   </style>
 </head>
 <body>
 
-  <div class="bg-hearts" aria-hidden="true">
-    <span>❤</span><span>❤</span><span>❤</span><span>❤</span>
-    <span>❤</span><span>❤</span><span>❤</span><span>❤</span>
+  <div class="bg-motifs" aria-hidden="true">
+    <span class="h">❤</span>
+    <span class="g">✦</span>
+    <span class="h">❤</span>
+    <span class="gn">✚</span>
+    <span class="g">◆</span>
+    <span class="h">❤</span>
+    <span class="g">✦</span>
+    <span class="gn">✚</span>
+    <span class="h">❤</span>
   </div>
 
   <main class="card" id="card">
+    <div class="tibeb" aria-hidden="true"></div>
+
     <div id="card-content">
-      <header class="card-header">
-        <div class="eyebrow">A Little Note For You</div>
-        <h1 class="title">
-          <span class="heart">❤</span> Lunch Invitation <span class="heart">❤</span>
-        </h1>
-        <div class="ornament">✦</div>
-      </header>
-
-      <section class="card-body">
-        <p class="greeting">Hey Love,</p>
-
-        <p class="message">
-          Tomorrow is the last day before the fasting season begins, and I know
-          you'll probably want to spend time with your family too.
-        </p>
-
-        <p class="message">
-          I'd love to steal just a little bit of your afternoon and take you out
-          for lunch at <span class="venue">Mitmita Restaurant</span> as a small
-          celebration. I recently got my salary, and I'd be really happy if
-          you'd let me treat you.
-        </p>
-
-        <div class="when-block">
-          <div class="col">
-            <div class="label">Day</div>
-            <div class="value">Sunday</div>
-          </div>
-          <div class="sep"></div>
-          <div class="col">
-            <div class="label">Time</div>
-            <div class="value">1:00 PM</div>
-          </div>
+      <div class="card-inner">
+        <div class="seal" aria-hidden="true">
+          <span class="seal-mark">ፍ</span>
         </div>
 
-        <p class="closing">Will you join me? ❤</p>
+        <header class="header">
+          <div class="eyebrow-am">የምሳ ግብዣ</div>
+          <div class="eyebrow-en">A Little Note For You</div>
+          <h1 class="title">
+            <span class="h">❤</span> Lunch Invitation <span class="h">❤</span>
+          </h1>
+          <div class="ornament">✦</div>
+        </header>
 
-        <div class="buttons">
-          <button class="btn-yes"  id="btn-yes">Yes ❤️</button>
-          <button class="btn-soft" id="btn-time">I Need Time 🤔</button>
-          <button class="btn-soft" id="btn-no">Can't Make It 😔</button>
-        </div>
-      </section>
+        <section class="body">
+          <p class="greeting">
+            Hey Love,
+            <span class="greeting-am">ሰላም ፍቅሬ</span>
+          </p>
 
-      <footer class="card-footer">
-        Made With Love <span class="h">❤️</span>
-      </footer>
+          <p class="message">
+            Tomorrow is the last day before the fasting season begins, and I know
+            you'll probably want to spend time with your family too.
+          </p>
+
+          <p class="message">
+            I'd love to steal just a little bit of your afternoon and take you out
+            for lunch at <span class="venue">Mitmita Restaurant</span> as a small
+            celebration. I recently got my salary, and I'd be really happy if
+            you'd let me treat you.
+          </p>
+
+          <div class="when-stamp">
+            <div class="row">
+              <div class="col">
+                <div class="label">Day</div>
+                <div class="value">Sunday</div>
+              </div>
+              <div class="ornament-mid">✦</div>
+              <div class="col">
+                <div class="label">Time</div>
+                <div class="value">1:00 PM</div>
+              </div>
+            </div>
+          </div>
+
+          <p class="closing">Will you join me? ❤</p>
+
+          <div class="buttons">
+            <button class="btn-yes"  id="btn-yes">Yes ❤️</button>
+            <button class="btn-soft" id="btn-time">I Need Time 🤔</button>
+            <button class="btn-soft" id="btn-no">Can't Make It 😔</button>
+          </div>
+        </section>
+
+        <footer class="card-footer">
+          Made With Love <span class="h">❤️</span>
+          <span class="am">በፍቅር የተሰራ</span>
+        </footer>
+      </div>
     </div>
+
+    <div class="tibeb" aria-hidden="true"></div>
   </main>
 
   <script>
@@ -473,23 +654,25 @@
 
       function renderResponse(innerHTML) {
         cardContent.innerHTML =
-          '<section class="card-body">' +
+          '<div class="card-inner">' +
             '<div class="response">' + innerHTML + '</div>' +
-          '</section>' +
-          '<footer class="card-footer">Made With Love <span class="h">❤️</span></footer>';
+            '<footer class="card-footer">Made With Love <span class="h">❤️</span>' +
+              '<span class="am">በፍቅር የተሰራ</span>' +
+            '</footer>' +
+          '</div>';
       }
 
       function spawnHearts() {
         const layer = document.createElement('div');
         layer.className = 'heart-burst';
 
-        const count = 28;
+        const count = 30;
         for (let i = 0; i < count; i++) {
           const h = document.createElement('span');
-          h.className = 'h';
-          h.textContent = '❤';
+          h.className = 'h' + (Math.random() < 0.3 ? ' gold' : '');
+          h.textContent = Math.random() < 0.2 ? '✦' : '❤';
           const angle    = (Math.PI * 2) * (i / count) + (Math.random() * 0.5 - 0.25);
-          const distance = 140 + Math.random() * 220;
+          const distance = 140 + Math.random() * 240;
           const x = Math.cos(angle) * distance;
           const y = Math.sin(angle) * distance;
           h.style.setProperty('--x', x + 'px');
@@ -502,7 +685,7 @@
         }
 
         document.body.appendChild(layer);
-        setTimeout(() => layer.remove(), 1900);
+        setTimeout(() => layer.remove(), 2000);
       }
 
       function sendReply(reply) {
@@ -530,8 +713,9 @@
         sendReply(REPLIES.yes);
 
         renderResponse(
-          '<div class="crest">❤️</div>' +
-          '<div class="resp-title">Yay! Thank you for saying yes ❤️</div>' +
+          '<div class="crest">❤</div>' +
+          '<div class="resp-title">Yay! Thank you for saying yes ❤</div>' +
+          '<div class="resp-am">አመሰግናለሁ ፍቅሬ</div>' +
           '<p>I can\'t wait to spend time with you tomorrow.</p>'
         );
       });
@@ -540,8 +724,9 @@
         sendReply(REPLIES.time);
 
         renderResponse(
-          '<div class="crest">🤍</div>' +
+          '<div class="crest">✦</div>' +
           '<div class="resp-title">No pressure 😊</div>' +
+          '<div class="resp-am">ጊዜ ውሰድ ፍቅሬ</div>' +
           '<p>Take your time and let me know.</p>'
         );
       });
@@ -550,8 +735,9 @@
         sendReply(REPLIES.no);
 
         renderResponse(
-          '<div class="crest">❤️</div>' +
-          '<div class="resp-title">That\'s okay ❤️</div>' +
+          '<div class="crest">❤</div>' +
+          '<div class="resp-title">That\'s okay ❤</div>' +
+          '<div class="resp-am">ችግር የለም ፍቅሬ</div>' +
           '<p>We\'ll find another day.</p>'
         );
       });
