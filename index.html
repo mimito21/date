@@ -582,6 +582,100 @@
       to   { opacity:1; transform:translateY(0); }
     }
 
+    /* ——— Countdown strip ——— */
+    .countdown {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 6px;
+      margin-top: 12px;
+      animation: fadeUp .9s .82s both;
+    }
+    .cd-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      min-width: 42px;
+    }
+    .cd-num {
+      font-family: 'Cinzel', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--burg-d);
+      line-height: 1;
+      background: linear-gradient(180deg, #fff4e8 0%, #ffffff 100%);
+      border: 1.5px solid var(--gold-2);
+      border-radius: 4px;
+      width: 48px;
+      text-align: center;
+      padding: 6px 0 4px;
+      box-shadow: 0 2px 6px rgba(192,24,28,.12);
+      transition: color .4s ease;
+    }
+    .cd-label {
+      font-family: 'Cinzel', serif;
+      font-size: 8px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--sepia-s);
+    }
+    .cd-sep {
+      font-family: 'Cinzel', serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--gold-2);
+      padding-bottom: 8px;
+      line-height: 1;
+    }
+    .cd-expired {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--green);
+      margin-top: 8px;
+    }
+
+    /* ——— Ripple on buttons ——— */
+    .btn { overflow: hidden; }
+    .ripple {
+      position: absolute;
+      border-radius: 50%;
+      transform: scale(0);
+      animation: rippleAnim .55s linear;
+      pointer-events: none;
+      background: rgba(255,255,255,0.45);
+    }
+    @keyframes rippleAnim {
+      to { transform: scale(4); opacity: 0; }
+    }
+
+    /* ——— Seal hover glow ——— */
+    .seal {
+      cursor: default;
+    }
+    .seal:hover {
+      box-shadow:
+        0 8px 22px rgba(192,24,28,.45),
+        0 2px 8px rgba(192,24,28,.25),
+        0 0 0 4px rgba(224,144,16,.35),
+        0 0 20px 6px rgba(255,160,60,.35),
+        inset 0 -5px 12px rgba(0,0,0,.25),
+        inset 0 0 0 2px rgba(224,144,16,.8),
+        inset 0 0 0 5px rgba(140,14,16,.5);
+      transform: rotate(-14deg) scale(1.08);
+      transition: box-shadow .3s ease, transform .3s ease;
+    }
+
+    /* ——— Confetti canvas ——— */
+    #confetti-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
     /* Animated jebena steam */
     .steam-wisp {
       animation: steamRise 2.4s ease-in-out infinite;
@@ -708,6 +802,8 @@
     <span class="r">❤</span>
     <span class="g2">◆</span>
   </div>
+
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
 
   <div class="scene">
   <main class="card" id="card">
@@ -882,6 +978,22 @@
                 <div class="date-value-am">ቀን ሰዓት</div>
               </div>
             </div>
+            <div class="countdown" id="countdown">
+              <div class="cd-unit">
+                <div class="cd-num" id="cd-h">00</div>
+                <div class="cd-label">Hours</div>
+              </div>
+              <div class="cd-sep">:</div>
+              <div class="cd-unit">
+                <div class="cd-num" id="cd-m">00</div>
+                <div class="cd-label">Min</div>
+              </div>
+              <div class="cd-sep">:</div>
+              <div class="cd-unit">
+                <div class="cd-num" id="cd-s">00</div>
+                <div class="cd-label">Sec</div>
+              </div>
+            </div>
           </div>
 
           <!-- Closing -->
@@ -1016,33 +1128,164 @@
           '<p class="resp-body">We\'ll find another day.</p>'
         );
       });
-      /* 3-D tilt on mouse move */
+      /* ── 3-D tilt ── */
       var card = document.getElementById('card');
-      var tiltActive = true;
-
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        tiltActive = false;
-      }
+      var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       document.addEventListener('mousemove', function (e) {
-        if (!tiltActive) return;
+        if (reducedMotion) return;
         var rect = card.getBoundingClientRect();
         var cx = rect.left + rect.width / 2;
         var cy = rect.top + rect.height / 2;
         var dx = (e.clientX - cx) / (window.innerWidth / 2);
         var dy = (e.clientY - cy) / (window.innerHeight / 2);
-        var rx = -dy * 8;
-        var ry =  dx * 8;
-        card.style.transform = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg) scale(1.015)';
+        card.style.transform = 'rotateX(' + (-dy * 8) + 'deg) rotateY(' + (dx * 8) + 'deg) scale(1.015)';
         card.style.boxShadow =
-          (ry * -2) + 'px ' + (rx * 2) + 'px 60px rgba(0,0,0,.75), ' +
-          '0 0 60px rgba(201,164,74,.2)';
+          (dx * -16) + 'px ' + (dy * 16) + 'px 50px rgba(140,60,20,.22), ' +
+          '0 8px 28px rgba(192,120,0,.14)';
       });
-
       document.addEventListener('mouseleave', function () {
         card.style.transform = '';
         card.style.boxShadow = '';
       });
+
+      /* ── Countdown to next Sunday 13:00 ── */
+      function nextSunday1PM() {
+        var now = new Date();
+        var d   = new Date(now);
+        var day = d.getDay(); // 0=Sun
+        var daysUntil = (7 - day) % 7 || 7;
+        d.setDate(d.getDate() + daysUntil);
+        d.setHours(13, 0, 0, 0);
+        // If today IS Sunday but before 1 PM, target today
+        if (day === 0 && now.getHours() < 13) {
+          d = new Date(now);
+          d.setHours(13, 0, 0, 0);
+        }
+        return d;
+      }
+
+      var cdH = document.getElementById('cd-h');
+      var cdM = document.getElementById('cd-m');
+      var cdS = document.getElementById('cd-s');
+      var cdBox = document.getElementById('countdown');
+
+      function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+      function tickCountdown() {
+        var target = nextSunday1PM();
+        var diff   = target - Date.now();
+
+        if (diff <= 0) {
+          cdBox.innerHTML = '<div class="cd-expired">The moment is here! 🎉</div>';
+          return;
+        }
+
+        var totalSec = Math.floor(diff / 1000);
+        var s = totalSec % 60;
+        var m = Math.floor(totalSec / 60) % 60;
+        var h = Math.floor(totalSec / 3600) % 24;
+        var days = Math.floor(totalSec / 86400);
+
+        if (days > 0) {
+          // Show days + hours when more than a day away
+          if (!document.getElementById('cd-d')) {
+            cdBox.innerHTML =
+              '<div class="cd-unit"><div class="cd-num" id="cd-d">00</div><div class="cd-label">Days</div></div>' +
+              '<div class="cd-sep">:</div>' +
+              '<div class="cd-unit"><div class="cd-num" id="cd-h">00</div><div class="cd-label">Hours</div></div>' +
+              '<div class="cd-sep">:</div>' +
+              '<div class="cd-unit"><div class="cd-num" id="cd-m">00</div><div class="cd-label">Min</div></div>';
+            cdH = document.getElementById('cd-h');
+            cdM = document.getElementById('cd-m');
+            cdS = null;
+          }
+          document.getElementById('cd-d').textContent = pad(days);
+          cdH.textContent = pad(h);
+          cdM.textContent = pad(m);
+        } else {
+          if (cdH) cdH.textContent = pad(h);
+          if (cdM) cdM.textContent = pad(m);
+          if (cdS) cdS.textContent = pad(s);
+        }
+      }
+
+      tickCountdown();
+      setInterval(tickCountdown, 1000);
+
+      /* ── Button ripple ── */
+      document.querySelectorAll('.btn').forEach(function (btn) {
+        btn.addEventListener('click', function (e) {
+          var r   = document.createElement('span');
+          var rect = btn.getBoundingClientRect();
+          var size = Math.max(btn.offsetWidth, btn.offsetHeight);
+          r.className = 'ripple';
+          r.style.width  = size + 'px';
+          r.style.height = size + 'px';
+          r.style.left   = (e.clientX - rect.left - size / 2) + 'px';
+          r.style.top    = (e.clientY - rect.top  - size / 2) + 'px';
+          btn.appendChild(r);
+          setTimeout(function () { r.remove(); }, 600);
+        });
+      });
+
+      /* ── Page-load confetti shower ── */
+      (function () {
+        if (reducedMotion) return;
+        var canvas  = document.getElementById('confetti-canvas');
+        var ctx     = canvas.getContext('2d');
+        var W = canvas.width  = window.innerWidth;
+        var H = canvas.height = window.innerHeight;
+        var colours = ['#c0181c','#e09010','#1a6b3a','#f5b020','#e03030','#228845','#ffe060','#8c0e10'];
+        var pieces  = [];
+        var running = true;
+
+        for (var i = 0; i < 110; i++) {
+          pieces.push({
+            x:  Math.random() * W,
+            y:  -Math.random() * H * 0.5,
+            w:  6 + Math.random() * 8,
+            h:  10 + Math.random() * 10,
+            r:  Math.random() * Math.PI * 2,
+            vx: (Math.random() - 0.5) * 2.5,
+            vy: 2.5 + Math.random() * 3.5,
+            vr: (Math.random() - 0.5) * 0.2,
+            c:  colours[Math.floor(Math.random() * colours.length)],
+            op: 1
+          });
+        }
+
+        function draw() {
+          if (!running) return;
+          ctx.clearRect(0, 0, W, H);
+          var alive = false;
+          pieces.forEach(function (p) {
+            p.x  += p.vx;
+            p.y  += p.vy;
+            p.r  += p.vr;
+            p.vy *= 0.995;
+            if (p.y > H * 0.7) p.op -= 0.03;
+            if (p.op > 0) {
+              alive = true;
+              ctx.save();
+              ctx.globalAlpha = Math.max(0, p.op);
+              ctx.translate(p.x, p.y);
+              ctx.rotate(p.r);
+              ctx.fillStyle = p.c;
+              ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+              ctx.restore();
+            }
+          });
+          if (alive) {
+            requestAnimationFrame(draw);
+          } else {
+            ctx.clearRect(0, 0, W, H);
+            running = false;
+          }
+        }
+
+        draw();
+      })();
 
     })();
   </script>
