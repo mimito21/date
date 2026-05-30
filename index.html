@@ -70,6 +70,30 @@
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.23  0 0 0 0 0.15  0 0 0 0 0.07  0 0 0 0.55 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
     }
 
+    /* Warm candlelight glow that gently flickers behind the card */
+    body::after {
+      content: '';
+      position: fixed;
+      left: 50%;
+      top: 50%;
+      width: 640px;
+      height: 640px;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 0;
+      background: radial-gradient(circle, rgba(217, 178, 81, 0.28) 0%, rgba(217, 178, 81, 0.12) 35%, transparent 68%);
+      filter: blur(8px);
+      animation: candle 6s ease-in-out infinite;
+    }
+    @keyframes candle {
+      0%, 100% { opacity: 0.85; transform: translate(-50%, -50%) scale(1); }
+      45%      { opacity: 1;    transform: translate(-50%, -51%) scale(1.04); }
+      70%      { opacity: 0.78; transform: translate(-50%, -49.5%) scale(0.99); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      body::after { animation: none; }
+    }
+
     /* ——— Floating background motifs (hearts, crosses, diamonds) ——— */
     .bg-motifs {
       position: fixed;
@@ -144,15 +168,33 @@
       to   { opacity: 1; transform: translateY(0)    scale(1);    filter: sepia(0);   }
     }
 
+    /* —— Gold filigree corner ornaments —— */
+    .corner {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      z-index: 3;
+      pointer-events: none;
+      background-repeat: no-repeat;
+      background-size: contain;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'><g fill='none' stroke='%23c19a3d' stroke-width='1.4' stroke-linecap='round'><path d='M4 4 V20 M4 4 H20'/><path d='M4 4 Q24 4 24 24'/><path d='M4 4 Q4 24 24 24'/><circle cx='4' cy='4' r='2.2' fill='%236b1c1c' stroke='none'/><circle cx='24' cy='24' r='1.6' fill='%23c19a3d' stroke='none'/></g></svg>");
+      animation: fadeUp 0.9s 0.5s both;
+    }
+    .corner.tl { top: 6px;  left: 6px;  transform: rotate(0deg);   }
+    .corner.tr { top: 6px;  right: 6px; transform: rotate(90deg);  }
+    .corner.br { bottom: 6px; right: 6px; transform: rotate(180deg); }
+    .corner.bl { bottom: 6px; left: 6px;  transform: rotate(270deg); }
+
     /* —— Tibeb (Ethiopian telet) embroidery band —— */
     .tibeb {
       position: relative;
       z-index: 2;
-      height: 18px;
+      height: 24px;
       background-color: var(--burgundy-deep);
-      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='44' height='18' viewBox='0 0 44 18'><rect width='44' height='18' fill='%234a0f0f'/><path d='M0 9 L11 2 L22 9 L11 16 Z' fill='%23c19a3d'/><path d='M22 9 L33 2 L44 9 L33 16 Z' fill='%232f5d3a'/><circle cx='11' cy='9' r='2.2' fill='%234a0f0f'/><circle cx='33' cy='9' r='2.2' fill='%23c19a3d'/><path d='M0 0 H44' stroke='%23c19a3d' stroke-width='0.5'/><path d='M0 18 H44' stroke='%23c19a3d' stroke-width='0.5'/></svg>");
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='48' height='24' viewBox='0 0 48 24'><rect width='48' height='24' fill='%234a0f0f'/><rect y='0' width='48' height='2.4' fill='%23c19a3d'/><rect y='21.6' width='48' height='2.4' fill='%23c19a3d'/><rect y='3.2' width='48' height='1' fill='%232f5d3a'/><rect y='19.8' width='48' height='1' fill='%232f5d3a'/><path d='M0 12 L12 4.5 L24 12 L12 19.5 Z' fill='%23c19a3d'/><path d='M24 12 L36 4.5 L48 12 L36 19.5 Z' fill='%23d9b251'/><path d='M12 12 L18 8 L24 12 L18 16 Z' fill='%234a0f0f'/><path d='M36 12 L42 8 L48 12 L42 16 Z' fill='%232f5d3a'/><circle cx='0' cy='12' r='2' fill='%23d9b251'/><circle cx='24' cy='12' r='2' fill='%234a0f0f'/><circle cx='48' cy='12' r='2' fill='%23d9b251'/></svg>");
       background-repeat: repeat-x;
-      background-size: auto 18px;
+      background-size: auto 24px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.4), inset 0 -1px 3px rgba(0,0,0,0.4);
     }
 
     /* —— Header —— */
@@ -200,11 +242,30 @@
     .title {
       font-family: 'Playfair Display', 'Cormorant Garamond', serif;
       font-weight: 700;
-      font-size: 36px;
+      font-size: 37px;
       line-height: 1.1;
-      color: var(--burgundy-deep);
       letter-spacing: 0.5px;
       animation: fadeUp 0.9s 0.35s both;
+    }
+    .title .label {
+      background: linear-gradient(100deg,
+        var(--burgundy-deep) 0%,
+        var(--burgundy) 28%,
+        var(--gold-bright) 50%,
+        var(--burgundy) 72%,
+        var(--burgundy-deep) 100%);
+      background-size: 220% 100%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: foil 5.5s ease-in-out infinite;
+    }
+    @keyframes foil {
+      0%, 100% { background-position: 0% 0; }
+      50%      { background-position: 100% 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .title .label { animation: none; }
     }
     .title .h {
       color: var(--burgundy);
@@ -224,17 +285,29 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      margin-top: 16px;
-      color: var(--gold);
-      font-size: 14px;
+      gap: 14px;
+      margin-top: 18px;
       animation: fadeUp 0.9s 0.45s both;
     }
     .ornament::before, .ornament::after {
       content: '';
-      width: 56px;
+      width: 58px;
       height: 1px;
       background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .ornament .jebena {
+      width: 30px;
+      height: 30px;
+      display: block;
+      filter: drop-shadow(0 1px 1px rgba(74,15,15,0.3));
+      animation: steam 4s ease-in-out infinite;
+    }
+    @keyframes steam {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%      { transform: translateY(-2px) rotate(3deg); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .ornament .jebena { animation: none; }
     }
 
     /* —— Wax seal in top-right —— */
@@ -559,6 +632,11 @@
   </div>
 
   <main class="card" id="card">
+    <span class="corner tl" aria-hidden="true"></span>
+    <span class="corner tr" aria-hidden="true"></span>
+    <span class="corner bl" aria-hidden="true"></span>
+    <span class="corner br" aria-hidden="true"></span>
+
     <div class="tibeb" aria-hidden="true"></div>
 
     <div id="card-content">
@@ -571,9 +649,20 @@
           <div class="eyebrow-am">የምሳ ግብዣ</div>
           <div class="eyebrow-en">A Little Note For You</div>
           <h1 class="title">
-            <span class="h">❤</span> Lunch Invitation <span class="h">❤</span>
+            <span class="h">❤</span> <span class="label">Lunch Invitation</span> <span class="h">❤</span>
           </h1>
-          <div class="ornament">✦</div>
+          <div class="ornament">
+            <svg class="jebena" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <g fill="none" stroke="#6b1c1c" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M26 10 h12" />
+                <path d="M32 10 v6" />
+                <path d="M22 18 q-2 0 -2 3 q0 9 5 16 q4 6 4 12 h6 q0 -6 4 -12 q5 -7 5 -16 q0 -3 -2 -3 z" fill="#c19a3d" />
+                <path d="M44 26 q9 2 7 11 q-1 5 -6 5" fill="none" stroke="#6b1c1c" />
+                <path d="M24 49 h16 q2 0 2 3 v2 h-20 v-2 q0 -3 2 -3 z" fill="#6b1c1c" />
+                <circle cx="32" cy="33" r="3" fill="#6b1c1c" stroke="none" />
+              </g>
+            </svg>
+          </div>
         </header>
 
         <section class="body">
