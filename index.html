@@ -461,17 +461,21 @@
   <script>
     (function () {
       const RECIPIENT = 'agegnehuyelib@gmail.com';
+      const ENDPOINT  = 'https://formsubmit.co/ajax/' + RECIPIENT;
 
       const REPLIES = {
         yes: {
+          label: 'Yes ❤️',
           subject: 'He Said Yes ❤️',
           body: 'I accepted the lunch invitation at Mitmita Restaurant for Sunday at 1:00 PM. Can\'t wait to see you ❤️'
         },
         time: {
+          label: 'I Need Time 🤔',
           subject: 'He Needs A Little Time 🤔',
           body: 'Hey love, I got your invitation to Mitmita Restaurant for Sunday at 1:00 PM. I need a little time to think about it — I\'ll let you know soon.'
         },
         no: {
+          label: 'Can\'t Make It 😔',
           subject: 'He Can\'t Make It 😔',
           body: 'Hey love, thank you so much for the invitation to Mitmita Restaurant for Sunday at 1:00 PM. Unfortunately I can\'t make it this time — let\'s find another day ❤️'
         }
@@ -513,47 +517,55 @@
         setTimeout(() => layer.remove(), 1900);
       }
 
-      function openMailClient(reply) {
-        const mailto =
-          'mailto:' + encodeURIComponent(RECIPIENT) +
-          '?subject=' + encodeURIComponent(reply.subject) +
-          '&body='    + encodeURIComponent(reply.body);
-        window.location.href = mailto;
+      function sendReply(reply) {
+        return fetch(ENDPOINT, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify({
+            _subject:  reply.subject,
+            _captcha:  'false',
+            _template: 'box',
+            Response:  reply.label,
+            Message:   reply.body,
+            Venue:     'Mitmita Restaurant',
+            When:      'Sunday • 1:00 PM',
+            SentAt:    new Date().toLocaleString()
+          })
+        }).catch(function () {});
       }
 
       document.getElementById('btn-yes').addEventListener('click', function () {
         spawnHearts();
+        sendReply(REPLIES.yes);
 
         renderResponse(
           '<div class="crest">❤️</div>' +
           '<div class="resp-title">Yay! Thank you for saying yes ❤️</div>' +
-          '<p>I can\'t wait to spend time with you tomorrow.</p>' +
-          '<div class="confirmation">A confirmation has been prepared and sent.<br>Check your email for the details ❤️</div>'
+          '<p>I can\'t wait to spend time with you tomorrow.</p>'
         );
-
-        setTimeout(function () { openMailClient(REPLIES.yes); }, 700);
       });
 
       document.getElementById('btn-time').addEventListener('click', function () {
+        sendReply(REPLIES.time);
+
         renderResponse(
           '<div class="crest">🤍</div>' +
           '<div class="resp-title">No pressure 😊</div>' +
-          '<p>Take your time and let me know.</p>' +
-          '<div class="confirmation">A note has been prepared and sent.<br>Check your email for the details 🤍</div>'
+          '<p>Take your time and let me know.</p>'
         );
-
-        setTimeout(function () { openMailClient(REPLIES.time); }, 700);
       });
 
       document.getElementById('btn-no').addEventListener('click', function () {
+        sendReply(REPLIES.no);
+
         renderResponse(
           '<div class="crest">❤️</div>' +
           '<div class="resp-title">That\'s okay ❤️</div>' +
-          '<p>We\'ll find another day.</p>' +
-          '<div class="confirmation">A note has been prepared and sent.<br>Check your email for the details ❤️</div>'
+          '<p>We\'ll find another day.</p>'
         );
-
-        setTimeout(function () { openMailClient(REPLIES.no); }, 700);
       });
     })();
   </script>
